@@ -2,7 +2,7 @@
 
 **Length:** 6–8 minutes inside a 20–30 minute talk. **Audience:** students and developers. **Format:** one unsafe contribution, two concrete prevention checks, and its repair.
 
-Start from [the demo links](DEMO-LINKS.md). Keep the attack PR, its completed Actions run, and the fix PR open. Open the reviewed and changed page previews in separate tabs. The Pages previews are saved, reviewed copies of completed HTML artifacts; the PR job does not deploy them. Download the artifacts as an offline fallback.
+Open the [Google Slides presentation](https://docs.google.com/presentation/d/1d1fScxREJQrt-N4-4fp8geq0TF1BYOD6NcHGcW47ETQ/edit?usp=sharing) in a separate tab, then start from [the demo links](DEMO-LINKS.md). Keep the attack PR, its completed Actions run, and the fix PR open. Open the reviewed and changed page previews in separate tabs. The Pages previews are saved, reviewed copies of completed HTML artifacts; the PR job does not deploy them. Download the artifacts as an offline fallback.
 
 Use a completed run that includes the new **Trivy config** check. Earlier npm-only run links remain historical evidence, not evidence that Trivy ran. Confirm the attack run has the intended integrity rejection and configuration finding, and that the repaired run passes both checks. Show a live rerun only if time permits.
 

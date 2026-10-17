@@ -1,5 +1,7 @@
 # Verified rehearsal links
 
+**Presentation:** [Securing Open Source — GitHub to the Cloud (Google Slides)](https://docs.google.com/presentation/d/1d1fScxREJQrt-N4-4fp8geq0TF1BYOD6NcHGcW47ETQ/edit?usp=sharing)
+
 Start at the [presentation launch page](https://adilshehzad786.github.io/hacktoberfest-supply-chain-demo/). The completed runs below were checked on 17 October 2026.
 
 | Show this | Link | Observed result |
