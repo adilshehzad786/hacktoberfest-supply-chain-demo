@@ -1,5 +1,7 @@
 # Would you merge a green build?
 
+**Presentation:** [Securing Open Source — GitHub to the Cloud](https://docs.google.com/presentation/d/1d1fScxREJQrt-N4-4fp8geq0TF1BYOD6NcHGcW47ETQ/edit?usp=sharing)
+
 **Open the demo:** [before/after pages](https://adilshehzad786.github.io/hacktoberfest-supply-chain-demo/) · [attack PR #1](https://github.com/adilshehzad786/hacktoberfest-supply-chain-demo/pull/1) · [fixed PR #2](https://github.com/adilshehzad786/hacktoberfest-supply-chain-demo/pull/2) · [all rehearsal links](docs/DEMO-LINKS.md)
 
 A six-to-eight-minute GitHub demo for Hacktoberfest: a tiny dependency change produces a successful build, captures a **fake** token into a local file, and changes the website. The same package is then rejected by a check that preserves the reviewed lockfile.
