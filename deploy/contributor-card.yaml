@@ -32,7 +32,7 @@ spec:
           image: example.invalid/workshop/contributor-card:1.0.0
           imagePullPolicy: Always
           securityContext:
-            privileged: true
+            privileged: false
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true
             capabilities:
