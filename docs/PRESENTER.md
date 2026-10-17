@@ -1,91 +1,108 @@
 # Would you merge a green build?
 
-**Length:** 5–7 minutes inside a 20–30 minute talk. **Audience:** students and developers. **Format:** one incident, then a prevention replay.
+**Length:** 6–8 minutes inside a 20–30 minute talk. **Audience:** students and developers. **Format:** one unsafe contribution, two concrete prevention checks, and its repair.
 
-Keep three things ready: the attack PR, its completed Actions run, and the fix PR. Download the clean and unsafe HTML artifacts before the session and open both locally in browser tabs. The setup guide explains which files to use. Show a completed run first; a live rerun is optional.
+Start from [the demo links](DEMO-LINKS.md). Keep the attack PR, its completed Actions run, and the fix PR open. Open the reviewed and changed page previews in separate tabs. The Pages previews are saved, reviewed copies of completed HTML artifacts; the PR job does not deploy them. Download the artifacts as an offline fallback.
+
+Use a completed run that includes the new **Trivy config** check. Earlier npm-only run links remain historical evidence, not evidence that Trivy ran. Confirm the attack run has the intended integrity rejection and configuration finding, and that the repaired run passes both checks. Show a live rerun only if time permits.
 
 ## 0:00–0:40 — Ask for a decision
 
-**Screen:** Attack PR → **Files changed**. Start on its short readable change; mention that the archive is a binary change if GitHub cannot show its contents. Do not imply a hidden payload is visible in a tiny text diff.
+**Screen:** Attack PR → **Files changed**. Show the readable dependency change and `deploy/` manifest. The dependency archive is binary; do not pretend its contents are visible in GitHub's text diff.
 
-**Say:** “You are reviewing a contribution before a release. Our application code has not changed. A dependency has the same package name and version, but its bytes changed. Would a green build be enough for you to approve this?”
+**Say:** “You are reviewing a contribution before a release. The application code is unchanged, but a dependency has new bytes and the deployment settings changed. Would a green build be enough to approve it?”
 
-Pause for a show of hands. Then open the PR's **Checks**.
+Pause for hands, then open **Checks**.
 
-**Say:** “One build is green. Another check is red. Let's see why those results can both be correct.”
+**Say:** “Our ordinary build succeeds. The checks that ask different security questions reject the change. Let's see what each result means.”
 
-## 0:40–2:10 — Show the attack's effect
+## 0:40–2:00 — Show the attack's effect
 
-**Screen:** **Unsafe install · teaching only** → its Actions summary. Show the clean page for a few seconds, then the unsafe page.
+**Screen:** **Unsafe install · teaching only** → Actions summary. Show the reviewed page, then the changed page.
 
-Point to the clean headline, **“Your first contribution belongs here,”** then the changed headline, **“A dependency changed this page.”**
+Point to **“Your first contribution belongs here”**, then **“A dependency changed this page.”**
 
-**Say:** “The ordinary build completed. But the page we produced changed. A dependency became part of our release without anyone editing our application.”
+**Say:** “The build finished, but the dependency changed what we produced. No one had to edit our application to change its output.”
 
-Return to the unsafe job summary and point to the evidence that the install hook copied the fake token. The website shows the page change; the summary shows the capture evidence.
+Return to the summary's fake-token capture evidence.
 
-**Say:** “This package also ran code during installation. In our training example, it copied a fixed fake token into a local file. Nothing is sent to the internet. The lesson is that code running inside a build can reach the inputs that build gives it.”
+**Say:** “The package also ran code during installation. Our authored hook copies a fixed fake token into a local file. The hook makes no network request. GitHub then stores that file as teaching evidence. Code running in a build can reach the inputs we give it.”
 
-**Audience prompt:** “Which part of the green result checked that the output was the output we intended?”
+**Audience prompt:** “Which part of a successful build checks that this was the output we intended?”
 
-Do not read raw logs. Use the summary and visible page. If someone asks how the hook works, show the small authored fixture after the main story.
+## 2:00–3:05 — Reject the changed dependency
 
-## 2:10–3:35 — Stop the same package
+**Screen:** **Protected install** → summary. Point to `EINTEGRITY` once.
 
-**Screen:** Return to **Protected install** → summary, then the failing install step only if needed.
+**Say:** “This path keeps our reviewed lockfile. npm compares the supplied archive with the bytes we approved. They differ, so installation stops before the dependency hook or page build.”
 
-**Say:** “Now we send the same changed package through a build that keeps our reviewed lockfile. It asks npm to install the bytes we approved. The bytes do not match, so installation stops before the package hook or website build.”
+**Say:** “This red check is prevention working. It is not a malware verdict. If we approve unsafe code and its new lockfile together, the checksum can match perfectly.”
 
-Point to `EINTEGRITY` once.
+## 3:05–4:20 — Reject unsafe deployment settings
 
-**Say:** “This red result is our prevention working. We did not teach a scanner this package's name. We preserved a decision about which bytes we trust.”
+**Screen:** `deploy/` diff → the container's `securityContext.privileged: true` → **Trivy config** finding and file/line.
 
-If the repository's required-check rule has been configured and verified, return to the PR and point to the blocked merge status:
+**Say:** “The same contribution also asks Kubernetes to run a privileged container. We do not apply this manifest. Trivy reads the configuration and flags the unsafe setting before it reaches a cluster.”
 
-**Say:** “This check is required on the target branch, so this PR cannot merge while it is failing.”
+Point to the actual finding's severity and the configured **HIGH,CRITICAL** failure threshold.
 
-If no such rule is active, say only: “The check rejects the package. Making this check required is what turns that signal into a merge gate.”
+**Say:** “Here Trivy is checking configuration. It is not scanning an image for vulnerable packages, and it is not deciding whether our npm fixture is malware. Different checks answer different questions.”
 
-## 3:35–4:35 — Repair and finish green
+If verified repository settings require both **Protected install** and **Trivy config** on `main`, show PR #1's blocked merge status: “These checks are required, so this PR cannot merge while they fail.” Otherwise explain that making them required is the remaining enforcement step; a red check alone does not prove a merge gate is active.
 
-**Screen:** Prepared fix PR → **Files changed** → **Checks** → corrected output.
+## 4:20–5:15 — Repair and finish green
 
-This PR targets the attack branch, making the repair visible as its own diff. It is a comparison of before/after check results, not a demonstration of the `main` merge rule.
+**Screen:** Fix PR #2 → **Files changed** → **Checks** → expected page.
 
-**Say:** “We restore the reviewed dependency bytes. We do not regenerate the lockfile just to make the warning disappear. The protected install now passes and the expected page comes back.”
+**Say:** “The fix restores the reviewed dependency and the restricted deployment configuration. We do not replace the lockfile to bless the changed package, or suppress the infrastructure finding. The same checks now accept the repaired input.”
 
-Point to the passing protected check and the clean artifact.
+Show the green protected install and Trivy results from the completed repaired run. A green Trivy result means no findings crossed this configured threshold in these files; it does not certify a live cluster.
 
-**Say:** “Green is useful when we know what the check actually guarantees.”
+PR #2 targets the attack branch so its repair diff stays visible. It does **not** target `main`, so it does not demonstrate the `main` merge rule. Keep both teaching PRs unmerged.
 
-Keep both teaching PRs unmerged. Their preserved before/after runs are part of the demonstration.
+## 5:15–6:05 — Explain the other security layers
 
-## 4:35–5:35 — Connect it to the slides
+**Screen:** The check list and `.github/dependabot.yml`. Keep this to one sentence per tool; use [the tool map](SECURITY-TOOLS.md) for questions.
 
-Return to the presentation's source → build → delivery graphic.
+- **CodeQL:** “Our configured analyses check JavaScript source and GitHub Actions workflows without running the application build. Completed scans and their findings tell us more than an enabled badge.”
+- **Dependency review:** “Checks recognized dependency changes against vulnerability and policy data. Our same-version local archive is not a known-advisory demonstration.”
+- **Dependabot:** “Proposes GitHub Actions updates for review; a scheduled update is not proof of safety.”
 
-| Stage | What the audience just saw | Habit to take away |
-|---|---|---|
-| **Source** | Dependency bytes changed | Review dependencies, archives, and lockfiles together |
-| **Build** | Installation ran dependency code | Keep credentials and write permissions out of untrusted build paths |
-| **Delivery** | A successful build produced the wrong page | Check the output and enforce release verification before deployment |
+If asked about secrets, show the enabled secret-scanning and push-protection settings. Their settings were verified, but this session does not stage a push-protection test or use real credentials.
 
-**Say:** “We followed one dependency all the way through. The main prevention in this demo is the reviewed lockfile plus the required install check. In a real pipeline, also restrict credentials and verify the release you deliver. Today's artifact is local HTML, not a cloud deployment.”
+Say “configured” until a completed run is visible. A successful analysis job is not a blanket declaration that the repository is safe. Only show a Dependabot PR if one exists.
 
-Keep the distinction clear: this demo does not prove a live cloud identity policy, deploy an attested release, or detect every malicious package.
+## 6:05–7:15 — Close with the real incident and the slides
 
-## 5:35–6:20 — Give attendees one useful contribution
+**Screen:** [Trivy's official incident account](https://github.com/aquasecurity/trivy/discussions/10462), then the presentation's source → build → delivery graphic.
 
-**Screen:** `.github/dependabot.yml`, then an existing Dependabot Actions update PR if one is available.
+**Say:** “In February and March 2026, Trivy's own supply chain was compromised. A vulnerable workflow exposed credentials, surviving access enabled malicious releases, and existing action tags were redirected. Security tools are dependencies too.”
 
-**Say:** “Here is a small open-source contribution: keep workflow dependencies reviewed and current. Dependabot can open update PRs for our GitHub Actions. A person still reviews what changed. It would not magically identify our invented package as malware.”
+Point to this repository's reviewed full action SHAs and explicit scanner version.
 
-**Final audience prompt:** “Before you merge your next dependency change, which trust decision will you check?”
+**Say:** “Pin and review the action, its nested actions, and the tool it downloads. A fixed identity still needs a trust decision. Limit credentials so one compromised component has less reach.”
 
-Close on: **Review the bytes. Limit the build. Verify the release.**
+Close with the three connections: **Source:** review dependency bytes. **Build:** restrict what dependency code can access. **Delivery:** check configuration and verify the release before deploying. Our scan never applies Kubernetes resources, and our Pages preview is a reviewed copy of an artifact, not deployment by untrusted PR code.
 
-## Short recording plan
+**Final prompt:** “Which one of these checks could you contribute to an open-source project?”
 
-Record the same six-minute order with pre-opened tabs. Keep browser zoom readable from the back of the room. Use the PR diff, two check summaries, and two page views; skip scrolling through installation logs. Pause briefly after the first audience question so the recording also works with live narration.
+## Placement in the selected presentation
 
-If Actions is slow or unavailable, use the saved run's summaries and the downloaded HTML files. State that these are results from the recorded run. Never substitute a screenshot for a live result without saying so.
+The selected PDF has **23 physical pages** and retains footer numbers from the larger deck. These are different numbering systems. For one continuous demo, preview the incident on page 5, introduce the dependency example on page 7, then run this full story after page 17. Alternatively, show the npm segment at page 7 and the 75-second Trivy segment at page 17 without replaying the whole story.
+
+| Physical PDF page | Printed footer | Slide | Demo connection |
+|---|---|---|---|
+| 3–4 | 03–04 | Software journey / attack path | Map the single PR through source, build, and output |
+| 5 | 05 | Trivy, February–March 2026 | Use the official dated incident account, not malware samples |
+| 6 | 06 | Source: the package name is a trust decision | Inspect the dependency change in PR #1 |
+| 7 | 12 | Demo: npm ci rejects the changed package | Replace the terminal sequence with PR, page change, and protected check |
+| 8 | 14 | Dependabot has three different jobs | Show this repo's Actions version-update configuration |
+| 10 | 21 | Secret scanning and push protection | Show verified settings; do not claim an unperformed rejection test |
+| 11 | 22 | CodeQL checks code and workflow patterns | Show completed analysis and explain coverage |
+| 13 | 24 | Build: PR checks have no deployment access | Explain the fake token and limited PR-job permissions |
+| 14–15 | 25–26 | Workflow identities / workflow checks | Explain full SHAs, nested dependencies, and linting |
+| 16 | 27 | Cloud: only the approved job gets a credential | Discuss the boundary; do not claim this demo tests live cloud identity |
+| 17 | 28 | Infrastructure checks should fail before apply | Show Trivy rejecting `privileged: true`, then accepting the repair |
+| 18–19 | 42–43 | Security PRs / each tool needs a working check | Separate observed rejection, required gates, and tool ownership |
+
+For recording, use readable browser zoom and pre-opened tabs. If GitHub is slow, use saved run summaries and downloaded artifacts, identified as recorded evidence. Do not present an earlier run as proof of newly added checks.

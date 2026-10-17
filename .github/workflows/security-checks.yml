@@ -1,0 +1,85 @@
+name: Cloud configuration guard
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: cloud-config-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  trivy:
+    name: Trivy config
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out without persisting credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Node for the report summary
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Download and verify the selected scanner before execution
+        id: scanner
+        shell: bash
+        run: |
+          set -euo pipefail
+          scanner_dir="$(mktemp -d "$RUNNER_TEMP/trivy-demo.XXXXXX")"
+          archive="$scanner_dir/trivy.tar.gz"
+          curl --fail --silent --show-error --location --proto '=https' --tlsv1.2 \
+            'https://github.com/aquasecurity/trivy/releases/download/v0.76.0/trivy_0.76.0_Linux-64bit.tar.gz' \
+            --output "$archive"
+          printf '%s  %s\n' 'e24b1c51293c1b15e4ba8d45bbc7891ba053f90278ec2698f3562c993e145fe7' "$archive" \
+            | sha256sum --check --strict
+          tar -xzf "$archive" -C "$scanner_dir" trivy
+          chmod 0755 "$scanner_dir/trivy"
+          "$scanner_dir/trivy" --version
+          echo "binary=$scanner_dir/trivy" >> "$GITHUB_OUTPUT"
+          test ! -L output
+          test ! -L output/security
+          mkdir -p output/security
+      - name: Reject HIGH or CRITICAL Kubernetes configuration findings
+        id: trivy
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          scan-type: config
+          scan-ref: deploy
+          format: json
+          output: output/security/trivy.json
+          severity: HIGH,CRITICAL
+          exit-code: '1'
+          cache: 'false'
+          skip-setup-trivy: 'true'
+          trivy-config: /dev/null
+          timeout: 3m
+        env:
+          TRIVY_CMD: ${{ steps.scanner.outputs.binary }}
+          # Use this verified binary's embedded checks for reproducible rehearsal.
+          TRIVY_SKIP_CHECK_UPDATE: 'true'
+          TRIVY_SKIP_VERSION_CHECK: 'true'
+          TRIVY_DISABLE_TELEMETRY: 'true'
+          TRIVY_INCLUDE_NON_FAILURES: 'true'
+          TRIVY_MISCONFIG_SCANNERS: kubernetes
+          TRIVY_IGNOREFILE: /dev/null
+      - name: Explain the observed result to the audience
+        if: always()
+        env:
+          TRIVY_SCAN_OUTCOME: ${{ steps.trivy.outcome }}
+        run: node scripts/trivy-summary.mjs
+      - name: Save the scanner report and audience summary
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: trivy-config-evidence
+          path: output/security/
+          if-no-files-found: error
+          retention-days: 7

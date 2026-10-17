@@ -1,0 +1,57 @@
+# Static teaching input only. No workflow applies this file to a cluster.
+# example.invalid is deliberately not a working image registry.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: contributor-card
+  namespace: workshop
+  labels:
+    app: contributor-card
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: contributor-card
+  template:
+    metadata:
+      labels:
+        app: contributor-card
+    spec:
+      automountServiceAccountToken: false
+      hostNetwork: false
+      hostPID: false
+      hostIPC: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: contributor-card
+          image: example.invalid/workshop/contributor-card:1.0.0
+          imagePullPolicy: Always
+          securityContext:
+            privileged: true
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
+          resources:
+            requests:
+              cpu: 100m
+              memory: 64Mi
+            limits:
+              cpu: 250m
+              memory: 128Mi
+          ports:
+            - name: http
+              containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
