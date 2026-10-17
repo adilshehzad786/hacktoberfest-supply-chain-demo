@@ -1,9 +1,114 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
-<title>Would you merge a green build?</title><style>
-*{box-sizing:border-box}body{margin:0;background:#f4f6fc;color:#17234c;font:20px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}main{max-width:1080px;margin:0 auto;padding:72px 32px}h1{font-size:clamp(42px,6vw,78px);line-height:1.04;letter-spacing:-.055em;max-width:900px;margin:22px 0}p{max-width:740px}a{color:#253acb;text-underline-offset:4px}a:focus-visible{outline:3px solid #ac1757;outline-offset:5px}.views{display:flex;gap:18px;flex-wrap:wrap;margin:40px 0}.views a{padding:22px 30px;font-size:24px;font-weight:700;text-decoration:none;color:white;background:#3449e5;border-radius:10px}.views a:last-child{background:#ac1757}ol{padding-left:28px}li{padding:8px 0}small{display:block;color:#455477;max-width:800px;margin-top:38px;font-size:15px}
-</style></head><body><main><a href="https://github.com/adilshehzad786/hacktoberfest-supply-chain-demo">GitHub teaching repository</a><h1>Would you merge<br>a green build?</h1><p>The application code stayed the same. A replacement dependency changed the page it shipped. These are the actual HTML artifacts from the GitHub Actions rehearsal.</p>
-<div class="views"><a href="preview/before/">Open the reviewed page</a><a href="preview/after/">Open the changed page</a></div>
-<ol><li><a href="https://github.com/adilshehzad786/hacktoberfest-supply-chain-demo/pull/1/files">Inspect the dependency replacement in PR #1</a>.</li><li><a href="https://github.com/adilshehzad786/hacktoberfest-supply-chain-demo/actions/runs/38986660088">Compare the green ordinary build and the red integrity check</a>.</li><li><a href="https://github.com/adilshehzad786/hacktoberfest-supply-chain-demo/pull/2">See the reviewed bytes restored in PR #2</a>.</li></ol>
-<small>Saved from Actions run 38986660088, commit 6f250c9. Harmless authored fixture; fixed fake credential; no network receiver or cloud deployment. These preview pages preserve the completed rehearsal. Rerunning Actions creates new artifacts and does not automatically replace these pages.</small></main></body></html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+  <title>Would you merge a green build?</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f4f6fc; color: #17234c; font: 20px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; }
+    main { max-width: 1080px; margin: 0 auto; padding: 72px 32px; }
+    h1 { font-size: clamp(42px,6vw,78px); line-height: 1.04; letter-spacing: -.055em; max-width: 900px; margin: 22px 0; }
+    h2 { font-size: clamp(29px,3.4vw,42px); line-height: 1.13; letter-spacing: -.035em; margin: 0 0 18px; }
+    h3 { font-size: 25px; line-height: 1.2; letter-spacing: -.025em; margin: 0 0 18px; }
+    p { max-width: 740px; }
+    a { color: #253acb; text-underline-offset: 4px; }
+    a:focus-visible { outline: 3px solid #ac1757; outline-offset: 5px; }
+    .views { display: flex; gap: 18px; flex-wrap: wrap; margin: 40px 0; }
+    .views a { padding: 22px 30px; font-size: 24px; font-weight: 700; text-decoration: none; color: white; background: #3449e5; border-radius: 10px; }
+    .views a:last-child { background: #ac1757; }
+    ol { padding-left: 28px; }
+    li { padding: 8px 0; }
+    .rehearsal-note { display: block; color: #455477; max-width: 800px; margin-top: 38px; font-size: 15px; }
+    .layers { margin-top: 68px; padding-top: 46px; border-top: 1px solid #cdd5eb; }
+    .section-intro { margin: 0 0 28px; color: #455477; }
+    .tool-grid { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 16px; }
+    .tool { background: #fff; border: 1px solid #cdd5eb; border-top: 4px solid #3449e5; border-radius: 5px 5px 16px 16px; padding: 25px 23px; }
+    .tool p { margin: 0 0 16px; font-size: 17px; line-height: 1.55; }
+    .tool .tool-names { color: #253acb; font-weight: 700; line-height: 1.45; }
+    .tool p:last-child { margin-bottom: 0; }
+    .tool .scope { color: #455477; font-size: 14px; }
+    .checks-link { display: inline-block; font-size: 18px; font-weight: 700; margin-top: 24px; }
+    .incident { display: grid; grid-template-columns: .9fr 1.2fr; gap: 38px; margin-top: 54px; padding: 34px; background: #e6ebff; border-radius: 18px; }
+    .incident h2 { font-size: clamp(29px,3vw,36px); max-width: 11ch; }
+    .incident p { font-size: 18px; line-height: 1.6; margin: 0 0 17px; }
+    .incident .incident-links { display: flex; flex-wrap: wrap; gap: 12px 24px; margin: 0; font-size: 16px; font-weight: 650; }
+    @media (max-width: 740px) {
+      main { padding: 38px 22px; }
+      body { font-size: 18px; }
+      .views { gap: 12px; margin: 30px 0; }
+      .views a { width: 100%; padding: 18px 22px; font-size: 21px; }
+      .layers { margin-top: 46px; padding-top: 32px; }
+      .tool-grid { grid-template-columns: 1fr; gap: 14px; }
+      .tool { padding: 22px; }
+      .tool h3 { margin-bottom: 12px; }
+      .incident { grid-template-columns: 1fr; gap: 6px; margin-top: 36px; padding: 25px 23px; }
+      .incident h2 { max-width: 17ch; }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <a href="https://github.com/adilshehzad786/hacktoberfest-supply-chain-demo">GitHub teaching repository</a>
+    <h1>Would you merge<br>a green build?</h1>
+    <p>The application code stayed the same. A replacement dependency changed the page it shipped. These are the actual HTML artifacts from the GitHub Actions rehearsal.</p>
+    <div class="views">
+      <a href="preview/before/">Open the reviewed page</a>
+      <a href="preview/after/">Open the changed page</a>
+    </div>
+    <ol>
+      <li><a href="https://github.com/adilshehzad786/hacktoberfest-supply-chain-demo/pull/1/files">Inspect the dependency replacement in PR #1</a>.</li>
+      <li><a href="https://github.com/adilshehzad786/hacktoberfest-supply-chain-demo/actions/runs/38987904715">Compare the green ordinary build and the red integrity check</a>.</li>
+      <li><a href="https://github.com/adilshehzad786/hacktoberfest-supply-chain-demo/pull/2">See the reviewed bytes restored in PR #2</a>.</li>
+    </ol>
+    <small class="rehearsal-note">Saved from Actions run 38987904715, commit b782b87. Harmless authored fixture; fixed fake credential. GitHub Pages hosts reviewed copies of these rehearsal artifacts; pull request jobs do not deploy. Rerunning Actions creates new artifacts and does not automatically replace these pages.</small>
+
+    <section aria-labelledby="verified-heading" style="margin-top:56px;border-top:1px solid #cbd2e5;padding-top:32px">
+      <h2 id="verified-heading">Two rejections. One repaired PR.</h2>
+      <p><strong>Dependency gate:</strong> the changed archive fails integrity verification before its install hook runs.</p>
+      <p><strong>Cloud gate:</strong> Trivy reports one <strong>HIGH · KSV-0017</strong> finding for <code>privileged: true</code>. Restoring the restricted manifest gives 22 passing checks and no HIGH/CRITICAL findings.</p>
+      <p><a href="https://github.com/adilshehzad786/hacktoberfest-supply-chain-demo/actions/runs/38987904750">Open the Trivy rejection</a> · <a href="https://github.com/adilshehzad786/hacktoberfest-supply-chain-demo/actions/runs/38987927994">Open the passing repair</a></p>
+      <p><a href="https://github.com/adilshehzad786/hacktoberfest-supply-chain-demo/blob/main/docs/PRESENTER.md">Follow the 7-minute presenter script</a> · <a href="https://github.com/adilshehzad786/hacktoberfest-supply-chain-demo/blob/main/docs/DEMO-LINKS.md">All verified runs and saved evidence</a></p>
+    </section>
+
+    <section class="layers" aria-labelledby="layers-title">
+      <h2 id="layers-title">Put a check where the risk enters.</h2>
+      <p class="section-intro">Follow the same source → build → delivery journey. Each tool answers a different question; a green result covers the checks it ran.</p>
+      <div class="tool-grid">
+        <article class="tool">
+          <h3>Source</h3>
+          <p class="tool-names">Reviewed lockfile<br>Dependabot<br>Dependency Review</p>
+          <p>Keep the reviewed package bytes fixed. Review dependency updates and check what a pull request adds.</p>
+          <p class="scope">The integrity check blocks this demo’s replacement package.</p>
+        </article>
+        <article class="tool">
+          <h3>Build</h3>
+          <p class="tool-names">CodeQL<br>Actions pinned to full SHAs</p>
+          <p>Check application code for security issues. Review the Actions your workflow executes and pin their exact commits.</p>
+          <p class="scope">Also inspect the tools and nested Actions they download.</p>
+        </article>
+        <article class="tool">
+          <h3>Delivery</h3>
+          <p class="tool-names">Trivy configuration checks</p>
+          <p>Check Kubernetes manifests for risky settings, including a container configured to run with privileges.</p>
+          <p class="scope">This demo scans configuration only. It does not deploy a Kubernetes cluster or claim to detect malware.</p>
+        </article>
+      </div>
+      <a class="checks-link" href="https://github.com/adilshehzad786/hacktoberfest-supply-chain-demo/actions/workflows/security-checks.yml">Inspect security checks</a>
+    </section>
+
+    <section class="incident" aria-labelledby="incident-title">
+      <h2 id="incident-title">Who checks the security tool?</h2>
+      <div>
+        <p>Security tools have a supply chain too. In March 2026, compromised Trivy releases and GitHub Action tags brought that risk into build pipelines.</p>
+        <p>Review the tool, pin reviewed versions, and verify what it downloads. The scanner needs the same care as the application it checks.</p>
+        <p class="incident-links">
+          <a href="https://github.com/aquasecurity/trivy/security/advisories/GHSA-69fq-xp46-6x23">Read the official Trivy advisory</a>
+          <a href="https://github.com/adilshehzad786/hacktoberfest-supply-chain-demo/blob/main/docs/TRIVY-INCIDENT.md">Use the talk’s incident notes</a>
+        </p>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

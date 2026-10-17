@@ -1,0 +1,81 @@
+name: GitHub security layers
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: github-security-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  dependency-review:
+    name: Dependency review
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Check out without storing credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Review new dependencies against known advisories
+        uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
+        with:
+          fail-on-severity: high
+          license-check: false
+          comment-summary-in-pr: never
+      - name: Explain this check's boundary
+        if: always()
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'SUMMARY'
+          ## Dependency review: known advisories
+          This check compares the PR's dependency graph against known advisories.
+          A hand-authored local archive has no published advisory. A passing result
+          does not approve its code or bytes; **Protected install** checks the locked bytes.
+          No PR comments or dependency code execution are needed for this check.
+          SUMMARY
+
+  codeql:
+    name: CodeQL (${{ matrix.language }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [javascript-typescript, actions]
+    # This isolated analysis job can upload findings, but cannot change source.
+    # It never installs or executes the teaching package.
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - name: Check out without storing credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Prepare static analysis without building
+        uses: github/codeql-action/init@6f2ac81f5cd81fe351a197ba0b00d91d03cd2aee # v4.39.0
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: none
+          queries: security-extended
+      - name: Analyze and publish code-scanning results
+        uses: github/codeql-action/analyze@6f2ac81f5cd81fe351a197ba0b00d91d03cd2aee # v4.39.0
+        with:
+          category: /language:${{ matrix.language }}
+      - name: Explain this check's boundary
+        if: always()
+        run: |
+          cat >> "$GITHUB_STEP_SUMMARY" <<'SUMMARY'
+          ## CodeQL: code patterns and data flow
+          Inspect the Code scanning results for findings. A completed analysis is not
+          a proof of malware absence, package integrity, or safe cloud configuration.
+          This job analyzes source without running npm install or the package hook.
+          SUMMARY

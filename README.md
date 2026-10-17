@@ -2,11 +2,11 @@
 
 **Open the demo:** [before/after pages](https://adilshehzad786.github.io/hacktoberfest-supply-chain-demo/) · [attack PR #1](https://github.com/adilshehzad786/hacktoberfest-supply-chain-demo/pull/1) · [fixed PR #2](https://github.com/adilshehzad786/hacktoberfest-supply-chain-demo/pull/2) · [all rehearsal links](docs/DEMO-LINKS.md)
 
-A six-minute GitHub demo for Hacktoberfest: a tiny dependency change produces a successful build, captures a **fake** token into a local file, and changes the website. The same package is then rejected by a check that preserves the reviewed lockfile.
+A six-to-eight-minute GitHub demo for Hacktoberfest: a tiny dependency change produces a successful build, captures a **fake** token into a local file, and changes the website. The same package is then rejected by a check that preserves the reviewed lockfile.
 
 **Start with the pull request, not the terminal.** Ask the audience to judge the change, reveal its effect, then show the prevention working.
 
-[Presenter script](docs/PRESENTER.md) · [Run and rehearse](docs/SETUP.md)
+[Presenter script](docs/PRESENTER.md) · [Run and rehearse](docs/SETUP.md) · [Security tools and slide mapping](docs/SECURITY-TOOLS.md) · [Trivy incident](docs/TRIVY-INCIDENT.md)
 
 ## The incident
 
@@ -38,9 +38,25 @@ Make **Protected install** a required check on the target branch to enforce that
 
 - **Real:** a GitHub pull request, Actions jobs, npm installation, an install hook, lockfile integrity rejection, generated HTML, and saved evidence.
 - **Authored for teaching:** both dependency variants, the page change, and the fixed fake token. The “capture” writes only to a local demo file. It does not send data to a receiver on the internet.
-- **No live deployment:** the HTML is a build artifact opened locally. No cloud account, real credential, malware sample, or npm package publication is needed.
+- **Reviewed static previews:** GitHub Pages hosts copies of completed HTML artifacts. The PR jobs do not deploy anything. The Kubernetes manifest is scanned as text; its example image is not pulled and no cluster is used.
 
 The unsafe job is intentionally a bad installation pattern for comparison. Its protections and fixed inputs make this a bounded teaching exercise; they do not turn arbitrary third-party code into safe code.
+
+## Add the cloud security decision
+
+The same teaching PR also changes `deploy/contributor-card.yaml` to request a privileged container. **Trivy config** scans that manifest and rejects HIGH/CRITICAL misconfigurations. The fix PR restores the restricted configuration. Nothing is deployed.
+
+This is a second, explicit risk in the PR: Trivy detects a cloud configuration mistake, while `npm ci` detects the changed dependency bytes. Neither result is presented as a general malware detector.
+
+| Layer | What this repository checks |
+|---|---|
+| Trivy | HIGH/CRITICAL configuration findings in `deploy/`; JSON evidence and readable job summary |
+| Dependency Review | New dependencies with known high/critical advisories |
+| CodeQL | JavaScript and GitHub Actions analysis, with results in Code scanning |
+| Dependabot | Weekly proposed Actions updates; native security updates enabled |
+| Secret scanning + push protection | Native GitHub features enabled; no real credential is used as a test |
+
+The [Trivy incident notes](docs/TRIVY-INCIDENT.md) link the official malware advisory and explain why the scanner itself must be reviewed and pinned. Read the [tool boundaries and slide map](docs/SECURITY-TOOLS.md) before presenting a passing check as a security guarantee.
 
 ## One useful Hacktoberfest contribution
 

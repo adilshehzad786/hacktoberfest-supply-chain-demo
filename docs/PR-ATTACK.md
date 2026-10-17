@@ -1,10 +1,19 @@
-This teaching PR replaces a local dependency archive while preserving its package name, version, and reviewed lockfile. The authored replacement changes the generated page and copies a fixed fake token into a local evidence file during installation.
+Would you merge this contribution because the ordinary build is green?
 
-Compare the two paths in **Attack then prevention**:
+This teaching PR makes two reviewable changes:
 
-- **Unsafe install · teaching only** is expected to finish green while producing the changed page and capture evidence.
-- **Protected install** is expected to fail with an integrity mismatch before the dependency hook or page build.
+1. Replaces a local dependency archive while preserving its name, version, and reviewed lockfile. The authored replacement changes the page and copies a fixed fake token into a local evidence file during installation.
+2. Changes the static Kubernetes manifest to `privileged: true`.
 
-Open the job summaries and downloaded HTML artifacts to inspect what happened. A red protected check is the intended result only when its evidence confirms the integrity rejection.
+| Check | Expected result | What to show |
+|---|---|---|
+| Unsafe install · teaching only | Green | Changed page and fake-token evidence |
+| Protected install | Red | `EINTEGRITY` before the hook or build |
+| Trivy config | Red | HIGH finding for the privileged container |
+| Dependency review / CodeQL | Inspect actual results | Complementary checks; they do not certify package behavior |
 
-This is a public training example. It uses authored fixtures, no real credentials, no network receiver, and no cloud deployment. Keep this PR unmerged as the attack example. A separately prepared fix restores the reviewed package bytes.
+Open the current job summaries for observed evidence. A download failure is not a successful prevention demo. On `main`, required checks turn the two rejections into a merge gate; verify the current blocked state.
+
+This uses harmless authored fixtures and a fixed fake credential. The package hook has no network receiver. The cloud configuration is scanned as text and never applied; no image is pulled. Pages hosts reviewed historical HTML copies, separately from PR jobs.
+
+Keep this PR unmerged. [PR #2](https://github.com/adilshehzad786/hacktoberfest-supply-chain-demo/pull/2) restores the reviewed dependency and restricted configuration. [Presenter guide](https://github.com/adilshehzad786/hacktoberfest-supply-chain-demo/blob/main/docs/PRESENTER.md) · [Official Trivy incident](https://github.com/aquasecurity/trivy/security/advisories/GHSA-69fq-xp46-6x23).
