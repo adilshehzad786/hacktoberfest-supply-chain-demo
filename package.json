@@ -1,0 +1,16 @@
+{
+  "name": "hacktoberfest-supply-chain-demo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Would you merge a green build? A harmless GitHub Actions teaching demo.",
+  "engines": {"node": ">=24"},
+  "scripts": {
+    "baseline": "node scripts/ci.mjs baseline",
+    "unsafe": "node scripts/ci.mjs unsafe",
+    "protected": "node scripts/ci.mjs protected",
+    "test": "node scripts/test.mjs"
+  },
+  "dependencies": {
+    "@workshop/contributor-card": "file:packages/contributor-card-1.0.0.tgz"
+  }
+}

@@ -1,0 +1,9 @@
+# Ownership requests a review; enforcement requires a branch protection rule.
+/.github/ @adilshehzad786
+/scripts/ @adilshehzad786
+/fixtures/ @adilshehzad786
+/vendor/ @adilshehzad786
+/packages/ @adilshehzad786
+/approved/ @adilshehzad786
+/package.json @adilshehzad786
+/package-lock.json @adilshehzad786

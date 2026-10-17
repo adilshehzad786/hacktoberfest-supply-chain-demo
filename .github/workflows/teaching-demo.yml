@@ -1,0 +1,107 @@
+name: Attack then prevention
+
+on:
+  pull_request:
+    # Also run the prepared fix PR against the unmerged teaching-attack branch.
+    types: [opened, synchronize, reopened, ready_for_review]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# This exercise never deploys, publishes a package, or writes back to a PR.
+permissions:
+  contents: read
+
+concurrency:
+  group: teaching-demo-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  baseline:
+    name: Baseline control
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Check out without persisting credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Node without dependency caching
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: Build the reviewed control package
+        run: node scripts/ci.mjs baseline
+      - name: Save the control page and observed evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: baseline-release
+          path: |
+            output/baseline/site/
+            output/baseline/evidence/
+          retention-days: 7
+          if-no-files-found: warn
+
+  unsafe:
+    name: Unsafe install · teaching only
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Check out without persisting credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Node without dependency caching
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      # Deliberately unsafe dependency policy, confined to authored fixtures
+      # and a fixed fake credential. Do not copy this policy into production.
+      - name: Demonstrate the consequence of discarding the reviewed lock
+        run: node scripts/ci.mjs unsafe
+      - name: Save the resulting page and observed evidence
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: unsafe-release
+          path: |
+            output/unsafe/site/
+            output/unsafe/evidence/
+          retention-days: 7
+          if-no-files-found: warn
+
+  protected:
+    # Keep this exact name stable: branch protection requires this check.
+    name: Protected install
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Check out without persisting credentials
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Set up Node without dependency caching
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      # An integrity rejection must fail this job. Do not add continue-on-error.
+      - name: Keep the reviewed lock and reject unexpected bytes
+        run: node scripts/ci.mjs protected
+      - name: Save evidence even when prevention rejects the package
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: protected-evidence
+          path: |
+            output/protected/site/
+            output/protected/evidence/
+          retention-days: 7
+          if-no-files-found: warn

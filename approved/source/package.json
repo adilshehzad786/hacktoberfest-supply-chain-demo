@@ -1,0 +1,11 @@
+{
+  "name": "@workshop/contributor-card",
+  "version": "1.0.0",
+  "main": "index.cjs",
+  "private": true,
+  "files": [
+    "index.cjs",
+    "postinstall.cjs"
+  ],
+  "description": "Authored offline teaching fixture. Never publish this package."
+}

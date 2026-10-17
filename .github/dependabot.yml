@@ -1,0 +1,14 @@
+version: 2
+updates:
+  # Maintain the actions used by this repository. The authored local npm fixture
+  # is not a published vulnerable package and is not a Dependabot alert demo.
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "09:00"
+      timezone: Asia/Karachi
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "chore(actions)"

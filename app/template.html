@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'sha256-{{STYLE_HASH}}'; script-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>A first contribution | Hacktoberfest teaching demo</title>
+  <style>{{STYLES}}</style>
+</head>
+<body class="{{VARIANT}}">
+  <div class="page">
+    <header class="masthead">
+      <div class="wordmark" aria-label="First contribution">
+        <svg viewBox="0 0 32 32" width="32" height="32" aria-hidden="true"><path d="M8 9v14m16-14c0 8-16 6-16 14"/><circle cx="8" cy="7" r="4"/><circle cx="8" cy="25" r="4"/><circle cx="24" cy="7" r="4"/></svg>
+        <span>First contribution</span>
+      </div>
+      <p class="occasion">A Hacktoberfest community card</p>
+    </header>
+
+    <main>
+      <article class="contribution" aria-labelledby="card-title">
+        <div class="copy">
+          <p class="invitation">Open source is built by people like you.</p>
+          <h1 id="card-title">{{HEADLINE}}</h1>
+          <p class="message">{{MESSAGE}}</p>
+          <div class="card-note"><span class="spark" aria-hidden="true">✳</span><span>Make a useful change.<br>Leave the project better.</span></div>
+        </div>
+
+        <div class="art" aria-hidden="true">
+          <div class="badge">
+            <div class="badge-top">Built together</div>
+            <svg class="branch" viewBox="0 0 240 260" fill="none">
+              <path d="M65 60v143M175 60c0 89-110 52-110 143"/>
+              <circle cx="65" cy="51" r="24"/><circle cx="175" cy="51" r="24"/><circle cx="65" cy="211" r="24"/>
+              <path class="branch-spark" d="M175 164v52m-26-26h52m-44-18 36 36m0-36-36 36"/>
+            </svg>
+            <div class="badge-title">Contributor</div>
+            <div class="badge-bottom">Every useful change counts.</div>
+          </div>
+          <span class="card-tab">Hello, open source.</span>
+        </div>
+      </article>
+      <div class="under-card">
+        <p>One contribution can reach a whole community.</p>
+        <p>Start small. Build together.</p>
+      </div>
+    </main>
+
+    <footer>
+      <p>Harmless teaching demo · local dependency</p>
+      <p>A small package supplies the headline and message.</p>
+    </footer>
+  </div>
+</body>
+</html>
