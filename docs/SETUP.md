@@ -24,7 +24,7 @@ The baseline always uses the independent reviewed fixture. The unsafe and protec
 4. If describing the PR as blocked from merging, verify the repository rule requires **Protected install** and inspect the PR's merge status. Do not infer branch protection from a red check alone.
 5. Follow the [presenter script](PRESENTER.md). Keep the raw logs closed unless someone asks a technical question.
 
-The downloaded HTML is a local view of an Actions artifact. There is no public production deployment in this exercise.
+Use the [public launch page](https://adilshehzad786.github.io/hacktoberfest-supply-chain-demo/) for reviewed copies of the actual artifacts, or use the downloaded HTML as an offline backup. The PR jobs do not deploy these previews.
 
 ## Running the same checks locally
 
@@ -52,3 +52,11 @@ For a GitHub merge gate, require **Protected install** on the target branch usin
 ## Dependabot follow-up
 
 `.github/dependabot.yml` configures **GitHub Actions** updates every Monday at 09:00 Asia/Karachi. Show its real configuration; only show an update PR if one actually exists. The toy local package is not an advisory-backed dependency and this demo does not claim Dependabot detects it. [Dependabot configuration reference](https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference)
+
+## Trivy and the other security checks
+
+Before the call, inspect **Trivy config** on the attack PR and fix PR. The attack must fail because the parsed `deploy/contributor-card.yaml` report contains a HIGH/CRITICAL finding, not because a download or runner failed. The fixed configuration must pass with a parsed, nonempty configuration result and no findings at the selected threshold. Open the `trivy-config-evidence` artifact and the job summary for the actual rule ID and line.
+
+Keep **Protected install** and **Trivy config** required on `main`. Dependency Review and CodeQL demonstrate complementary checks; a successful analysis job is not itself a proof that the code is safe. Show the Security tab for CodeQL findings. The fixed PR targets the attack branch for its readable repair diff.
+
+Trivy runs in GitHub Actions; you do not need to install a scanner or run Kubernetes on your laptop. No insecure deployment is started. Follow the [tool map](SECURITY-TOOLS.md) for exact presentation page references and the [incident notes](TRIVY-INCIDENT.md) for the official malware report.
