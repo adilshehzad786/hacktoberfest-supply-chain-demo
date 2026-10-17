@@ -7,8 +7,5 @@
     "index.cjs",
     "postinstall.cjs"
   ],
-  "description": "Authored offline teaching fixture. Never publish this package.",
-  "scripts": {
-    "postinstall": "node postinstall.cjs"
-  }
+  "description": "Authored offline teaching fixture. Never publish this package."
 }
