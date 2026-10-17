@@ -1,0 +1,484 @@
+{
+  "SchemaVersion": 2,
+  "Trivy": {
+    "Version": "0.76.0"
+  },
+  "ReportID": "01a14753-7bd8-7c53-b812-f62981d182b0",
+  "CreatedAt": "2026-10-17T00:46:55.960810164Z",
+  "ArtifactName": "deploy",
+  "ArtifactType": "filesystem",
+  "Results": [
+    {
+      "Target": "contributor-card.yaml",
+      "Class": "config",
+      "Type": "kubernetes",
+      "MisconfSummary": {
+        "Successes": 22,
+        "Failures": 0
+      },
+      "Misconfigurations": [
+        {
+          "Type": "Kubernetes Security Check",
+          "ID": "KCV-0093",
+          "Title": "Ensure ingress-nginx annotations are secure",
+          "Description": "Check for insecure annotations in ingress-nginx configurations.",
+          "Message": "No issues found",
+          "Namespace": "builtin.kubernetes.kcv0093",
+          "Query": "data.builtin.kubernetes.kcv0093.deny",
+          "Resolution": "Ensure that ingress-nginx annotations do not contain suspicious characters.",
+          "Severity": "CRITICAL",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/kcv-0093",
+          "References": [
+            "https://github.com/kubernetes/kubernetes/issues/131008",
+            "https://github.com/kubernetes/kubernetes/issues/131007",
+            "https://github.com/kubernetes/kubernetes/issues/131006",
+            "https://avd.aquasec.com/misconfig/kcv-0093"
+          ],
+          "Status": "PASS",
+          "CauseMetadata": {
+            "Provider": "Kubernetes",
+            "Service": "general"
+          }
+        },
+        {
+          "Type": "Kubernetes Security Check",
+          "ID": "KSV-0005",
+          "Title": "SYS_ADMIN capability added",
+          "Description": "SYS_ADMIN gives the processes running inside the container privileges that are equivalent to root.",
+          "Message": "No issues found",
+          "Namespace": "builtin.kubernetes.KSV005",
+          "Query": "data.builtin.kubernetes.KSV005.deny",
+          "Resolution": "Remove the SYS_ADMIN capability from 'containers[].securityContext.capabilities.add'.",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/ksv-0005",
+          "References": [
+            "https://kubesec.io/basics/containers-securitycontext-capabilities-add-index-sys-admin/",
+            "https://avd.aquasec.com/misconfig/ksv-0005"
+          ],
+          "Status": "PASS",
+          "CauseMetadata": {
+            "Provider": "Kubernetes",
+            "Service": "general"
+          }
+        },
+        {
+          "Type": "Kubernetes Security Check",
+          "ID": "KSV-0006",
+          "Title": "hostPath volume mounted with docker.sock",
+          "Description": "Mounting docker.sock from the host can give the container full root access to the host.",
+          "Message": "No issues found",
+          "Namespace": "builtin.kubernetes.KSV006",
+          "Query": "data.builtin.kubernetes.KSV006.deny",
+          "Resolution": "Do not specify /var/run/docker.socket in 'spec.template.volumes.hostPath.path'.",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/ksv-0006",
+          "References": [
+            "https://kubesec.io/basics/spec-volumes-hostpath-path-var-run-docker-sock/",
+            "https://avd.aquasec.com/misconfig/ksv-0006"
+          ],
+          "Status": "PASS",
+          "CauseMetadata": {
+            "Provider": "Kubernetes",
+            "Service": "general"
+          }
+        },
+        {
+          "Type": "Kubernetes Security Check",
+          "ID": "KSV-0008",
+          "Title": "Access to host IPC namespace",
+          "Description": "Sharing the host’s IPC namespace allows container processes to communicate with processes on the host.",
+          "Message": "No issues found",
+          "Namespace": "builtin.kubernetes.KSV008",
+          "Query": "data.builtin.kubernetes.KSV008.deny",
+          "Resolution": "Do not set 'spec.template.spec.hostIPC' to true.",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/ksv-0008",
+          "References": [
+            "https://kubernetes.io/docs/concepts/security/pod-security-standards/#baseline",
+            "https://avd.aquasec.com/misconfig/ksv-0008"
+          ],
+          "Status": "PASS",
+          "CauseMetadata": {
+            "Provider": "Kubernetes",
+            "Service": "general"
+          }
+        },
+        {
+          "Type": "Kubernetes Security Check",
+          "ID": "KSV-0009",
+          "Title": "Access to host network",
+          "Description": "Sharing the host’s network namespace permits processes in the pod to communicate with processes bound to the host’s loopback adapter.",
+          "Message": "No issues found",
+          "Namespace": "builtin.kubernetes.KSV009",
+          "Query": "data.builtin.kubernetes.KSV009.deny",
+          "Resolution": "Do not set 'spec.template.spec.hostNetwork' to true.",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/ksv-0009",
+          "References": [
+            "https://kubernetes.io/docs/concepts/security/pod-security-standards/#baseline",
+            "https://avd.aquasec.com/misconfig/ksv-0009"
+          ],
+          "Status": "PASS",
+          "CauseMetadata": {
+            "Provider": "Kubernetes",
+            "Service": "general"
+          }
+        },
+        {
+          "Type": "Kubernetes Security Check",
+          "ID": "KSV-0010",
+          "Title": "Access to host PID",
+          "Description": "Sharing the host’s PID namespace allows visibility on host processes, potentially leaking information such as environment variables and configuration.",
+          "Message": "No issues found",
+          "Namespace": "builtin.kubernetes.KSV010",
+          "Query": "data.builtin.kubernetes.KSV010.deny",
+          "Resolution": "Do not set 'spec.template.spec.hostPID' to true.",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/ksv-0010",
+          "References": [
+            "https://kubernetes.io/docs/concepts/security/pod-security-standards/#baseline",
+            "https://avd.aquasec.com/misconfig/ksv-0010"
+          ],
+          "Status": "PASS",
+          "CauseMetadata": {
+            "Provider": "Kubernetes",
+            "Service": "general"
+          }
+        },
+        {
+          "Type": "Kubernetes Security Check",
+          "ID": "KSV-0014",
+          "Title": "Root file system is not read-only",
+          "Description": "An immutable root file system prevents applications from writing to their local disk. This can limit intrusions, as attackers will not be able to tamper with the file system or write foreign executables to disk.",
+          "Message": "No issues found",
+          "Namespace": "builtin.kubernetes.KSV014",
+          "Query": "data.builtin.kubernetes.KSV014.deny",
+          "Resolution": "Change 'containers[].securityContext.readOnlyRootFilesystem' to 'true'.",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/ksv-0014",
+          "References": [
+            "https://kubesec.io/basics/containers-securitycontext-readonlyrootfilesystem-true/",
+            "https://avd.aquasec.com/misconfig/ksv-0014"
+          ],
+          "Status": "PASS",
+          "CauseMetadata": {
+            "Provider": "Kubernetes",
+            "Service": "general"
+          }
+        },
+        {
+          "Type": "Kubernetes Security Check",
+          "ID": "KSV-0017",
+          "Title": "Privileged",
+          "Description": "Privileged containers share namespaces with the host system and do not offer any security. They should be used exclusively for system containers that require high privileges.",
+          "Message": "No issues found",
+          "Namespace": "builtin.kubernetes.KSV017",
+          "Query": "data.builtin.kubernetes.KSV017.deny",
+          "Resolution": "Change 'containers[].securityContext.privileged' to 'false'.",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/ksv-0017",
+          "References": [
+            "https://kubernetes.io/docs/concepts/security/pod-security-standards/#baseline",
+            "https://avd.aquasec.com/misconfig/ksv-0017"
+          ],
+          "Status": "PASS",
+          "CauseMetadata": {
+            "Provider": "Kubernetes",
+            "Service": "general"
+          }
+        },
+        {
+          "Type": "Kubernetes Security Check",
+          "ID": "KSV-0024",
+          "Title": "Access to host ports",
+          "Description": "According to pod security standard 'Host Ports', hostPorts should be disallowed, or at minimum restricted to a known list.",
+          "Message": "No issues found",
+          "Namespace": "builtin.kubernetes.KSV024",
+          "Query": "data.builtin.kubernetes.KSV024.deny",
+          "Resolution": "Do not set spec.containers[*].ports[*].hostPort and spec.initContainers[*].ports[*].hostPort.",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/ksv-0024",
+          "References": [
+            "https://kubernetes.io/docs/concepts/security/pod-security-standards/#baseline",
+            "https://avd.aquasec.com/misconfig/ksv-0024"
+          ],
+          "Status": "PASS",
+          "CauseMetadata": {
+            "Provider": "Kubernetes",
+            "Service": "general"
+          }
+        },
+        {
+          "Type": "Kubernetes Security Check",
+          "ID": "KSV-0043",
+          "Title": "Do not allow impersonation of privileged groups",
+          "Description": "Check whether role permits impersonating privileged groups",
+          "Message": "No issues found",
+          "Namespace": "builtin.kubernetes.KSV043",
+          "Query": "data.builtin.kubernetes.KSV043.deny",
+          "Resolution": "Create a role which does not permit to impersonate privileged groups if not needed",
+          "Severity": "CRITICAL",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/ksv-0043",
+          "References": [
+            "https://kubernetes.io/docs/concepts/security/rbac-good-practices/",
+            "https://avd.aquasec.com/misconfig/ksv-0043"
+          ],
+          "Status": "PASS",
+          "CauseMetadata": {
+            "Provider": "Kubernetes",
+            "Service": "general"
+          }
+        },
+        {
+          "Type": "Kubernetes Security Check",
+          "ID": "KSV-0044",
+          "Title": "No wildcard verb and resource roles",
+          "Description": "Check whether role permits wildcard verb on wildcard resource",
+          "Message": "No issues found",
+          "Namespace": "builtin.kubernetes.KSV044",
+          "Query": "data.builtin.kubernetes.KSV044.deny",
+          "Resolution": "Create a role which does not permit wildcard verb on wildcard resource",
+          "Severity": "CRITICAL",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/ksv-0044",
+          "References": [
+            "https://kubernetes.io/docs/concepts/security/rbac-good-practices/",
+            "https://avd.aquasec.com/misconfig/ksv-0044"
+          ],
+          "Status": "PASS",
+          "CauseMetadata": {
+            "Provider": "Kubernetes",
+            "Service": "general"
+          }
+        },
+        {
+          "Type": "Kubernetes Security Check",
+          "ID": "KSV-0045",
+          "Title": "No wildcard verb roles",
+          "Description": "Check whether role permits wildcard verb on specific resources",
+          "Message": "No issues found",
+          "Namespace": "builtin.kubernetes.KSV045",
+          "Query": "data.builtin.kubernetes.KSV045.deny",
+          "Resolution": "Create a role which does not permit wildcard verb on specific resources",
+          "Severity": "CRITICAL",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/ksv-0045",
+          "References": [
+            "https://kubernetes.io/docs/concepts/security/rbac-good-practices/",
+            "https://avd.aquasec.com/misconfig/ksv-0045"
+          ],
+          "Status": "PASS",
+          "CauseMetadata": {
+            "Provider": "Kubernetes",
+            "Service": "general"
+          }
+        },
+        {
+          "Type": "Kubernetes Security Check",
+          "ID": "KSV-0047",
+          "Title": "Do not allow privilege escalation from node proxy",
+          "Description": "Check whether role permits privilege escalation from node proxy",
+          "Message": "No issues found",
+          "Namespace": "builtin.kubernetes.KSV047",
+          "Query": "data.builtin.kubernetes.KSV047.deny",
+          "Resolution": "Create a role which does not permit privilege escalation from node proxy",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/ksv-0047",
+          "References": [
+            "https://kubernetes.io/docs/concepts/security/rbac-good-practices/",
+            "https://avd.aquasec.com/misconfig/ksv-0047"
+          ],
+          "Status": "PASS",
+          "CauseMetadata": {
+            "Provider": "Kubernetes",
+            "Service": "general"
+          }
+        },
+        {
+          "Type": "Kubernetes Security Check",
+          "ID": "KSV-0051",
+          "Title": "Do not allow role binding creation and association with privileged role/clusterrole",
+          "Description": "Check whether role permits creating role bindings and associating to privileged role/clusterrole",
+          "Message": "No issues found",
+          "Namespace": "builtin.kubernetes.KSV051",
+          "Query": "data.builtin.kubernetes.KSV051.deny",
+          "Resolution": "Create a role which does not permit creation of role bindings and associating with privileged cluster role",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/ksv-0051",
+          "References": [
+            "https://kubernetes.io/docs/concepts/security/rbac-good-practices/",
+            "https://avd.aquasec.com/misconfig/ksv-0051"
+          ],
+          "Status": "PASS",
+          "CauseMetadata": {
+            "Provider": "Kubernetes",
+            "Service": "general"
+          }
+        },
+        {
+          "Type": "Kubernetes Security Check",
+          "ID": "KSV-0052",
+          "Title": "Do not allow role to create ClusterRoleBindings and association with privileged role",
+          "Description": "Check whether role permits creating role ClusterRoleBindings and association with privileged cluster role",
+          "Message": "No issues found",
+          "Namespace": "builtin.kubernetes.KSV052",
+          "Query": "data.builtin.kubernetes.KSV052.deny",
+          "Resolution": "Create a role which does not permit to create role clusterrolebindings and associate to privileged cluster role",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/ksv-0052",
+          "References": [
+            "https://kubernetes.io/docs/concepts/security/rbac-good-practices/",
+            "https://avd.aquasec.com/misconfig/ksv-0052"
+          ],
+          "Status": "PASS",
+          "CauseMetadata": {
+            "Provider": "Kubernetes",
+            "Service": "general"
+          }
+        },
+        {
+          "Type": "Kubernetes Security Check",
+          "ID": "KSV-0054",
+          "Title": "Do not allow attaching to shell on pods",
+          "Description": "Check whether role permits attaching to shell on pods",
+          "Message": "No issues found",
+          "Namespace": "builtin.kubernetes.KSV054",
+          "Query": "data.builtin.kubernetes.KSV054.deny",
+          "Resolution": "Create a role which does not permit attaching to shell on pods",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/ksv-0054",
+          "References": [
+            "https://kubernetes.io/docs/concepts/security/rbac-good-practices/",
+            "https://avd.aquasec.com/misconfig/ksv-0054"
+          ],
+          "Status": "PASS",
+          "CauseMetadata": {
+            "Provider": "Kubernetes",
+            "Service": "general"
+          }
+        },
+        {
+          "Type": "Kubernetes Security Check",
+          "ID": "KSV-0102",
+          "Title": "Tiller Is Deployed",
+          "Description": "Check if Helm Tiller component is deployed.",
+          "Message": "No issues found",
+          "Namespace": "builtin.kubernetes.KSV102",
+          "Query": "data.builtin.kubernetes.KSV102.deny",
+          "Resolution": "Migrate to Helm v3 which no longer has Tiller component",
+          "Severity": "CRITICAL",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/ksv-0102",
+          "References": [
+            "https://avd.aquasec.com/misconfig/ksv-0102"
+          ],
+          "Status": "PASS",
+          "CauseMetadata": {
+            "Provider": "Kubernetes",
+            "Service": "general"
+          }
+        },
+        {
+          "Type": "Kubernetes Security Check",
+          "ID": "KSV-0118",
+          "Title": "Default security context configured",
+          "Description": "Security context controls the allocation of security parameters for the pod/container/volume, ensuring the appropriate level of protection. Relying on default security context may expose vulnerabilities to potential attacks that rely on privileged access.",
+          "Message": "No issues found",
+          "Namespace": "builtin.kubernetes.KSV118",
+          "Query": "data.builtin.kubernetes.KSV118.deny",
+          "Resolution": "To enhance security, it is strongly recommended not to rely on the default security context. Instead, it is advisable to explicitly define the required security parameters (such as runAsNonRoot, capabilities, readOnlyRootFilesystem, etc.) within the security context.",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/ksv-0118",
+          "References": [
+            "https://kubernetes.io/docs/tasks/configure-pod-container/security-context/",
+            "https://avd.aquasec.com/misconfig/ksv-0118"
+          ],
+          "Status": "PASS",
+          "CauseMetadata": {
+            "Provider": "Kubernetes",
+            "Service": "general"
+          }
+        },
+        {
+          "Type": "Kubernetes Security Check",
+          "ID": "KSV-0119",
+          "Title": "NET_RAW capability added",
+          "Description": "The NET_RAW capability grants attackers the ability to eavesdrop on network traffic or generate IP traffic with falsified source addresses, posing serious security risks.",
+          "Message": "No issues found",
+          "Namespace": "builtin.kubernetes.KSV119",
+          "Query": "data.builtin.kubernetes.KSV119.deny",
+          "Resolution": "To mitigate potential security risks, it is strongly recommended to remove the NET_RAW capability from 'containers[].securityContext.capabilities.add'. It is advisable to follow the practice of dropping all capabilities and only adding the necessary ones.",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/ksv-0119",
+          "References": [
+            "https://kubernetes.io/docs/concepts/security/pod-security-standards/",
+            "https://avd.aquasec.com/misconfig/ksv-0119"
+          ],
+          "Status": "PASS",
+          "CauseMetadata": {
+            "Provider": "Kubernetes",
+            "Service": "general"
+          }
+        },
+        {
+          "Type": "Kubernetes Security Check",
+          "ID": "KSV-0120",
+          "Title": "SYS_MODULE capability added",
+          "Description": "The SYS_MODULE capability grants attackers the ability to install and remove kernel modules, posing serious security risks.",
+          "Message": "No issues found",
+          "Namespace": "builtin.kubernetes.KSV120",
+          "Query": "data.builtin.kubernetes.KSV120.deny",
+          "Resolution": "To mitigate potential security risks, it is strongly recommended to remove the SYS_MODULE capability from 'containers[].securityContext.capabilities.add'. It is advisable to follow the practice of dropping all capabilities and only adding the necessary ones.",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/ksv-0120",
+          "References": [
+            "https://kubernetes.io/docs/tasks/configure-pod-container/security-context/",
+            "https://avd.aquasec.com/misconfig/ksv-0120"
+          ],
+          "Status": "PASS",
+          "CauseMetadata": {
+            "Provider": "Kubernetes",
+            "Service": "general"
+          }
+        },
+        {
+          "Type": "Kubernetes Security Check",
+          "ID": "KSV-0121",
+          "Title": "Kubernetes resource with disallowed volumes mounted",
+          "Description": "HostPath present many security risks and as a security practice it is better to avoid critical host paths mounts.",
+          "Message": "No issues found",
+          "Namespace": "builtin.kubernetes.KSV121",
+          "Query": "data.builtin.kubernetes.KSV121.deny",
+          "Resolution": "Do not Set 'spec.volumes[*].hostPath.path' to any of the disallowed volumes.",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/ksv-0121",
+          "References": [
+            "https://kubernetes.io/docs/concepts/security/pod-security-standards/#restricted",
+            "https://avd.aquasec.com/misconfig/ksv-0121"
+          ],
+          "Status": "PASS",
+          "CauseMetadata": {
+            "Provider": "Kubernetes",
+            "Service": "general"
+          }
+        },
+        {
+          "Type": "Kubernetes Security Check",
+          "ID": "KSV-0124",
+          "Title": "Gatekeeper repo reference is ambiguously open-ended",
+          "Description": "A Gatekeeper policy that references image repositories for prefix-matching is using open-ended and ambiguous pattern, and can potentially match unintended repositories.",
+          "Message": "No issues found",
+          "Namespace": "builtin.kubernetes.KSV0124",
+          "Query": "data.builtin.kubernetes.KSV0124.deny",
+          "Severity": "HIGH",
+          "PrimaryURL": "https://avd.aquasec.com/misconfig/ksv-0124",
+          "References": [
+            "https://avd.aquasec.com/misconfig/ksv-0124"
+          ],
+          "Status": "PASS",
+          "CauseMetadata": {
+            "Provider": "Kubernetes",
+            "Service": "general"
+          }
+        }
+      ]
+    }
+  ]
+}

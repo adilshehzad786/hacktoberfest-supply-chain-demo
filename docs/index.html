@@ -59,10 +59,18 @@
     </div>
     <ol>
       <li><a href="https://github.com/adilshehzad786/hacktoberfest-supply-chain-demo/pull/1/files">Inspect the dependency replacement in PR #1</a>.</li>
-      <li><a href="https://github.com/adilshehzad786/hacktoberfest-supply-chain-demo/actions/runs/38986660088">Compare the green ordinary build and the red integrity check</a>.</li>
+      <li><a href="https://github.com/adilshehzad786/hacktoberfest-supply-chain-demo/actions/runs/38987904715">Compare the green ordinary build and the red integrity check</a>.</li>
       <li><a href="https://github.com/adilshehzad786/hacktoberfest-supply-chain-demo/pull/2">See the reviewed bytes restored in PR #2</a>.</li>
     </ol>
-    <small class="rehearsal-note">Saved from Actions run 38986660088, commit 6f250c9. Harmless authored fixture; fixed fake credential. GitHub Pages hosts reviewed copies of these rehearsal artifacts; pull request jobs do not deploy. Rerunning Actions creates new artifacts and does not automatically replace these pages.</small>
+    <small class="rehearsal-note">Saved from Actions run 38987904715, commit b782b87. Harmless authored fixture; fixed fake credential. GitHub Pages hosts reviewed copies of these rehearsal artifacts; pull request jobs do not deploy. Rerunning Actions creates new artifacts and does not automatically replace these pages.</small>
+
+    <section aria-labelledby="verified-heading" style="margin-top:56px;border-top:1px solid #cbd2e5;padding-top:32px">
+      <h2 id="verified-heading">Two rejections. One repaired PR.</h2>
+      <p><strong>Dependency gate:</strong> the changed archive fails integrity verification before its install hook runs.</p>
+      <p><strong>Cloud gate:</strong> Trivy reports one <strong>HIGH · KSV-0017</strong> finding for <code>privileged: true</code>. Restoring the restricted manifest gives 22 passing checks and no HIGH/CRITICAL findings.</p>
+      <p><a href="https://github.com/adilshehzad786/hacktoberfest-supply-chain-demo/actions/runs/38987904750">Open the Trivy rejection</a> · <a href="https://github.com/adilshehzad786/hacktoberfest-supply-chain-demo/actions/runs/38987927994">Open the passing repair</a></p>
+      <p><a href="https://github.com/adilshehzad786/hacktoberfest-supply-chain-demo/blob/main/docs/PRESENTER.md">Follow the 7-minute presenter script</a> · <a href="https://github.com/adilshehzad786/hacktoberfest-supply-chain-demo/blob/main/docs/DEMO-LINKS.md">All verified runs and saved evidence</a></p>
+    </section>
 
     <section class="layers" aria-labelledby="layers-title">
       <h2 id="layers-title">Put a check where the risk enters.</h2>
