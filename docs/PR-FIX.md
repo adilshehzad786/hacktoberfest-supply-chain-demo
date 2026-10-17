@@ -1,7 +1,13 @@
-This teaching fix restores the reviewed dependency bytes while retaining the approved lockfile. It repairs the changed package instead of regenerating a lockfile to approve it.
+This repair restores the reviewed dependency bytes and changes the static Kubernetes configuration back to `privileged: false`.
 
-Its base is the attack branch, so the diff shows the repair directly. It does not target `main` and does not demonstrate `main`'s merge rule. Keep both PRs unmerged for the before/after teaching comparison.
+It keeps the approved lockfile and the same checks. It does not bless the changed archive with a new lock or suppress the Trivy finding.
 
-**Protected install** should now pass and produce the expected page, with no fake-token capture. Inspect the completed Actions summary and artifact to confirm those outcomes.
+Expected results to verify in the latest completed runs:
 
-Compare this result with the attack PR: both use the same installation control; only the candidate package bytes differ. The lockfile and enforcement workflow still need review whenever they change.
+- **Protected install** is green, produces the expected page, and records no fake-token capture.
+- **Trivy config** is green, with an actual parsed configuration report and no HIGH/CRITICAL findings.
+- Dependency Review and both CodeQL analyses complete; inspect Code scanning findings too.
+
+This PR targets the attack branch so the repair diff is easy to review. It does **not** target `main` and does not demonstrate `main`'s merge rule. Keep both teaching PRs unmerged for the recording.
+
+[Compare the unsafe contribution in PR #1](https://github.com/adilshehzad786/hacktoberfest-supply-chain-demo/pull/1). No Kubernetes resource is applied in either version.

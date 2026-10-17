@@ -81,14 +81,51 @@ function safeOutput(file, create = false) {
   }
 }
 
+function readReport() {
+  safeOutput(reportPath);
+  // Validate and read the opened file itself. O_NOFOLLOW rejects replacement
+  // symlinks; O_NONBLOCK lets the regular-file check reject FIFOs without waiting.
+  const fd = fs.openSync(reportPath,
+    fs.constants.O_RDONLY | fs.constants.O_NOFOLLOW | fs.constants.O_NONBLOCK);
+  try {
+    const info = fs.fstatSync(fd);
+    assert(info.isFile() && info.nlink === 1, 'Scanner report must be an ordinary local file');
+    assert(info.size > 0 && info.size <= 4 * 1024 * 1024, 'Missing, empty, or oversized Trivy report');
+    const bytes = Buffer.alloc(info.size + 1);
+    let length = 0;
+    while (length < bytes.length) {
+      const count = fs.readSync(fd, bytes, length, bytes.length - length, null);
+      if (count === 0) break;
+      length += count;
+    }
+    assert(length === info.size, 'Scanner report changed size while being read');
+    return JSON.parse(bytes.subarray(0, length).toString('utf8'));
+  } finally {
+    fs.closeSync(fd);
+  }
+}
+
+function writeSummary(rendered) {
+  safeOutput(summaryPath, true);
+  fs.mkdirSync(path.dirname(summaryPath), {recursive: true});
+  // Do not truncate until this descriptor has passed the ownership checks.
+  const fd = fs.openSync(summaryPath,
+    fs.constants.O_WRONLY | fs.constants.O_CREAT | fs.constants.O_NOFOLLOW | fs.constants.O_NONBLOCK, 0o600);
+  try {
+    const info = fs.fstatSync(fd);
+    assert(info.isFile() && info.nlink === 1, 'Scanner summary must be an ordinary local file');
+    fs.ftruncateSync(fd, 0);
+    fs.writeFileSync(fd, rendered);
+  } finally {
+    fs.closeSync(fd);
+  }
+}
+
 function main() {
   let rendered;
   try {
     assert(process.argv.length === 2, 'Usage: node scripts/trivy-summary.mjs');
-    safeOutput(reportPath);
-    const size = fs.statSync(reportPath).size;
-    assert(size > 0 && size <= 4 * 1024 * 1024, 'Missing, empty, or oversized Trivy report');
-    const report = JSON.parse(fs.readFileSync(reportPath, 'utf8'));
+    const report = readReport();
     const summary = summarize(report, process.env.TRIVY_SCAN_OUTCOME);
     rendered = summary.markdown;
     if (summary.blocked) process.exitCode = 1;
@@ -98,9 +135,7 @@ function main() {
       + 'Inspect the Trivy step and the uploaded evidence before presenting this run.\n';
     process.exitCode = 1;
   }
-  safeOutput(summaryPath, true);
-  fs.mkdirSync(path.dirname(summaryPath), {recursive: true});
-  fs.writeFileSync(summaryPath, rendered);
+  writeSummary(rendered);
   if (process.env.GITHUB_STEP_SUMMARY) fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, rendered);
   console.log(rendered);
 }
